@@ -49,7 +49,7 @@
 
 然后点击左侧文件列表中的 .env 文件，在文件最下方点击 Add a Variable，设置 DATABASE_URL 变量。
 
-![image](https://user-images.githubusercontent.com/98247050/233638978-e1d3e0c6-2738-4fa5-b226-19c37bba2885.png)
+![image](https://user-images.githubusercontent.com/98247050/233643773-26ec547a-a1bd-48fe-8302-4a08cf556239.png)
 
 稍等片刻即部署完成。
 
