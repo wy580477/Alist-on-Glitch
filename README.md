@@ -39,6 +39,10 @@
 
 前往 glitch.com 注册账户，然后点击链接: https://glitch.com/edit/#!/remix/glitch-blank-node
 
+点击左侧文件列表中的 .env 文件，在文件最下方点击 Add a Variable，设置 DATABASE_URL 变量。
+
+![image](https://user-images.githubusercontent.com/98247050/233643773-26ec547a-a1bd-48fe-8302-4a08cf556239.png)
+
 下载[仓库文件](https://github.com/wy580477/Alist-on-Glitch/archive/refs/heads/main.zip)，然后解压缩。
 
 将解压缩得到的除README外的文件，拖动到 glitch 项目页面左侧 Files 处: 
@@ -47,11 +51,11 @@
 
 页面会弹出 overwrite 提示，全部点确定。
 
-然后点击左侧文件列表中的 .env 文件，在文件最下方点击 Add a Variable，设置 DATABASE_URL 变量。
-
-![image](https://user-images.githubusercontent.com/98247050/233643773-26ec547a-a1bd-48fe-8302-4a08cf556239.png)
-
 稍等片刻即部署完成。
+
+点击左侧文件列表中的 .env 文件，在文件最下方点击 Add a Variable，设置 SITE_URL 变量，值为项目网址，例如 https://apple-prange-fruit.glitch.me
+
+![image](https://user-images.githubusercontent.com/98247050/233753763-8b6de304-73ce-4df3-a9d0-2eb7da2221dd.png)
 
 点击页面下方 LOGS 即可得到初始密码。
 
