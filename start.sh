@@ -88,6 +88,7 @@ run_web() {
 
     export PORT=5244
     export LOG_ENABLE=false
+    export TEMP_DIR=/tmp/web
     chmod +x ./app.js
     exec ./app.js $CMD --no-prefix 2>&1 &
 }
