@@ -1,9 +1,10 @@
 FILES_PATH=${FILES_PATH:-./}
 CURRENT_VERSION=''
 RELEASE_LATEST=''
+CMD=$1
 
 get_current_version() {
-    chmod +x ./app.js 2> /dev/null
+    chmod +x ./app.js 2>/dev/null
     CURRENT_VERSION=$(./app.js version | grep -o v[0-9]*\.*.)
 }
 
@@ -40,53 +41,55 @@ install_web() {
     install -m 755 ${TMP_DIRECTORY}/alist ${FILES_PATH}/app.js
 }
 
+PARSE_DB_URL() {
+    # extract the protocol
+    proto="$(echo $DATABASE_URL | grep '://' | sed -e's,^\(.*://\).*,\1,g')"
+    if [[ "${proto}" =~ postgres ]]; then
+        export DB_TYPE=postgres
+        export DB_SSL_MODE=require
+    elif [[ "${proto}" =~ mysql ]]; then
+        export DB_TYPE=mysql
+        export DB_SSL_MODE=true
+    fi
+
+    # remove the protocol
+    url=$(echo $DATABASE_URL | sed -e s,${proto},,g)
+
+    # extract the user and password (if any)
+    userpass="$(echo $url | grep @ | cut -d@ -f1)"
+    export DB_PASS=$(echo $userpass | grep : | cut -d: -f2)
+    if [ -n "$DB_PASS" ]; then
+        export DB_USER=$(echo $userpass | grep : | cut -d: -f1)
+    else
+        export DB_USER=$userpass
+    fi
+
+    # extract the host -- updated
+    hostport=$(echo $url | sed -e s,$userpass@,,g | cut -d/ -f1)
+    export DB_PORT=$(echo $hostport | grep : | cut -d: -f2)
+    if [ -n "$DB_PORT" ]; then
+        export DB_HOST=$(echo $hostport | grep : | cut -d: -f1)
+    else
+        export DB_HOST=$hostport
+    fi
+
+    # extract the name (if any)
+    export DB_NAME="$(echo $url | grep / | cut -d/ -f2- | sed 's|?.*||')"
+}
+
 run_web() {
-    killall app.js 2>/dev/null
-    chmod +x ./app.js
-    
-    PARSE_DB_URL() {
-        # extract the protocol
-        proto="$(echo $DATABASE_URL | grep '://' | sed -e's,^\(.*://\).*,\1,g')"
-        if [[ "${proto}" =~ postgres ]]; then
-            export DB_TYPE=postgres
-            export DB_SSL_MODE=require
-        elif [[ "${proto}" =~ mysql ]]; then
-            export DB_TYPE=mysql
-            export DB_SSL_MODE=true
-        fi
-
-        # remove the protocol
-        url=$(echo $DATABASE_URL | sed -e s,${proto},,g)
-
-        # extract the user and password (if any)
-        userpass="$(echo $url | grep @ | cut -d@ -f1)"
-        export DB_PASS=$(echo $userpass | grep : | cut -d: -f2)
-        if [ -n "$DB_PASS" ]; then
-            export DB_USER=$(echo $userpass | grep : | cut -d: -f1)
-        else
-            export DB_USER=$userpass
-        fi
-
-        # extract the host -- updated
-        hostport=$(echo $url | sed -e s,$userpass@,,g | cut -d/ -f1)
-        export DB_PORT=$(echo $hostport | grep : | cut -d: -f2)
-        if [ -n "$DB_PORT" ]; then
-            export DB_HOST=`echo $hostport | grep : | cut -d: -f1`
-        else
-            export DB_HOST=$hostport
-        fi
-
-        # extract the name (if any)
-        export DB_NAME="`echo $url | grep / | cut -d/ -f2- | sed 's|?.*||'`"
-    }
+    if [ "$CMD" = "server" ]; then   
+        killall app.js 2>/dev/null
+    fi
 
     if [ "${DATABASE_URL}" != "" ]; then
         PARSE_DB_URL
     fi
-      
+
     export PORT=5244
     export LOG_ENABLE=false
-    exec ./app.js server --no-prefix 2>&1 &
+    chmod +x ./app.js
+    exec ./app.js $CMD --no-prefix 2>&1 &
 }
 
 TMP_DIRECTORY="$(mktemp -d)"

@@ -59,7 +59,18 @@
 
 点击页面下方 LOGS 即可得到初始密码。
 
-访问 项目网址/start，重启 alist。
+点击页面下方 TERMINAL，即可执行 Alist 命令:
+
+```
+# 获取管理员密码
+bash start.sh admin
+
+# 重启 Alist
+bash start.sh server
+
+# 查看 Alist 版本
+bash start.sh version
+```
 
 访问 项目网址/status，查看运行进程。
 

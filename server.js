@@ -6,7 +6,6 @@ const PROJECT_DOMAIN = process.env.PROJECT_DOMAIN;
 var exec = require("child_process").exec;
 const os = require("os");
 const { createProxyMiddleware } = require("http-proxy-middleware");
-var request = require("request");
 var fs = require("fs");
 var path = require("path");
 
@@ -18,19 +17,6 @@ app.get("/status", (req, res) => {
             res.type("html").send("<pre>命令行执行错误：\n" + err + "</pre>");
         } else {
             res.type("html").send("<pre>命令行执行结果：\n" + stdout + "</pre>");
-        }
-    });
-});
-
-//启动web
-app.get("/start", (req, res) => {
-    let cmdStr = "bash start.sh";
-    exec(cmdStr, function (err, stdout, stderr) {
-        if (err) {
-            res.send("命令行执行错误：" + err);
-        } else {
-            console.log("" + stdout);
-            res.send("命令行执行结果：" + "启动成功!");
         }
     });
 });
@@ -69,7 +55,7 @@ app.use(
         changeOrigin: true, // 默认false，是否需要改变原始主机头为目标URL
         ws: true,
         logLevel: "error",
-        onProxyReq: function onProxyReq(proxyReq, req, res) { },
+        onProxyReq: function onProxyReq(proxyReq, req, res) { }
     })
 );
 
@@ -85,7 +71,7 @@ function keepalive() {
             if (stdout.indexOf("./app.js server --no-prefix") != -1) {
             } else {
                 //web未运行，命令行调起
-                exec("/bin/bash start.sh");
+                exec("/bin/bash start.sh server");
             }
         } else console.log("保活-请求服务器进程表-命令行执行错误: " + err);
     });
