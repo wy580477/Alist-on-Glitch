@@ -74,6 +74,10 @@ bash start.sh version
 
 访问 项目网址/status，查看运行进程。
 
+## 通过 Cloudflare 反向代理设置自定义域名
+
+https://github.com/wy580477/PaaS-Related/blob/main/CF_Workers_Reverse_Proxy_chs_simple.md
+
 ## 鸣谢
 
 - [alist-org/alist](https://github.com/alist-org/alist)
