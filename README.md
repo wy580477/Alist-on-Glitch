@@ -20,12 +20,7 @@
 
 由于免费 Glitch 项目只能是公开项目，强烈建议连接外部 MySQL 或是 PostgreSQL 数据库。
 
-<details>
-<summary><b> bit.to 免费 PostgreSQL 数据库</b></summary>
-
-1. 前往 https://bit.io/ 注册账号，并新建一个数据库。
-2. 点击数据库名称，进入数据库管理页面，点击左侧的 Connection，复制 "Postgres Connection" 下方字符串即为数据库连接 URL。
-</details>
+**bit.to 将于 2023.6.29 停止服务**
 
 <details>
 <summary><b>  planetscale.com 免费 MySQL 数据库</b></summary>
@@ -34,6 +29,13 @@
 2. 点击数据库名称，进入数据库管理页面，点击左侧的 Connect，在 "connect with" 下拉菜单中选择 Symfony。
 3. 下方 "mysql://" 开头字符串即为数据库连接 URL。密码只会显示一次，如果忘记保存了可以点击 "New password" 重新生成。
 </details> 
+
+<details>
+<summary><b> elephantsql 免费 PostgreSQL 数据库</b></summary>
+
+1. 前往 https://www.elephantsql.com 注册账号，并新建一个数据库。
+2. 点击数据库名称，进入数据库管理页面，右侧的 Details 下方，复制 "URL" 项即为数据库连接 URL。
+</details>
 
 ## 部署
 

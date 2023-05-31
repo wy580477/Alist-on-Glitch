@@ -72,6 +72,9 @@ PARSE_DB_URL() {
     else
         export DB_HOST=$hostport
     fi
+    if [[ ${DB_TYPE} = postgres ]] && [[ ${DB_PORT} = "" ]]; then
+        export DB_PORT=5432
+    fi
 
     # extract the name (if any)
     export DB_NAME="$(echo $url | grep / | cut -d/ -f2- | sed 's|?.*||')"
