@@ -89,7 +89,7 @@ run_web() {
         PARSE_DB_URL
     fi
 
-    export PORT=5244
+    export HTTP_PORT=5244
     export LOG_ENABLE=false
     export TEMP_DIR=/tmp/web
     chmod +x ./app.js
