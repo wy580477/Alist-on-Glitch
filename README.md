@@ -7,6 +7,8 @@
 ## 注意
 
  **请勿滥用，账号封禁风险自负。**
+
+ Webdav 功能可能工作不正常。
  
 ## 变量
 
@@ -64,8 +66,11 @@
 点击页面下方 TERMINAL，即可执行 Alist 命令:
 
 ```
-# 获取管理员密码
-bash start.sh admin
+# 随机生成管理员密码
+bash start.sh admin random
+
+# 手动设置管理员密码,`NEW_PASSWORD`是指你需要设置的密码
+bash start.sh admin set NEW_PASSWORD
 
 # 重启 Alist
 bash start.sh server

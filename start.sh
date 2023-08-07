@@ -1,7 +1,7 @@
 FILES_PATH=${FILES_PATH:-./}
 CURRENT_VERSION=''
 RELEASE_LATEST=''
-CMD=$1
+CMD="$@"
 
 get_current_version() {
     chmod +x ./app.js 2>/dev/null
