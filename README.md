@@ -8,7 +8,7 @@
 
  **请勿滥用，账号封禁风险自负。**
 
- Webdav 功能可能工作不正常。
+ Webdav 功能可能工作不正常。（2024.03.08修复）
  
 ## 变量
 
@@ -17,6 +17,7 @@
 | 变量 | 默认值 | 说明 |
 | :--- | :--- | :--- |
 | `DATABASE_URL` | `` | 数据库连接 URL，默认留空为使用本地 sqlite 数据库 |
+| `ARGO_AUTH` | `` | 必填，用于连接 Cloudflare 提供的 Zero Trust Tunnel ，用以绑定域名以及解决 Webdav 挂载问题 |
 
 ## 数据持久化
 
@@ -81,9 +82,15 @@ bash start.sh version
 
 访问 项目网址/status，查看运行进程。
 
+接着进入 [CLoudflare Dash Board](https://one.dash.cloudflare.com/) ，在 Tunnel 中添加域名，即可使用自己的域名访问 AList ，且此域名可以挂载 Webdav 。
+
 ## 通过 Cloudflare 反向代理设置自定义域名
 
 https://github.com/wy580477/PaaS-Related/blob/main/CF_Workers_Reverse_Proxy_chs_simple.md
+
+## 保活
+
+使用任意网站监控程序监控 Glitch 自动分配的域名即可。
 
 ## 鸣谢
 
