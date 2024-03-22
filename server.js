@@ -1,11 +1,11 @@
 const express = require("express");
 const app = express();
-// const port = process.env.PORT || 3000;
 const port = 3000;
 const PROJECT_DOMAIN = process.env.PROJECT_DOMAIN;
 var exec = require("child_process").exec;
 const os = require("os");
 const { createProxyMiddleware } = require("http-proxy-middleware");
+var request = require("request");
 var fs = require("fs");
 var path = require("path");
 
@@ -20,6 +20,18 @@ app.get("/status", (req, res) => {
         }
     });
 });
+
+// 获取系统监听端口
+app.get("/listen", function (req, res) {
+    let cmdStr = "ss -nltp";
+    exec(cmdStr, function (err, stdout, stderr) {
+      if (err) {
+        res.type("html").send("<pre>命令行执行错误：\n" + err + "</pre>");
+      } else {
+        res.type("html").send("<pre>获取系统监听端口：\n" + stdout + "</pre>");
+      }
+    });
+  });
 
 //获取系统版本、内存信息
 app.get("/info", (req, res) => {
@@ -48,6 +60,17 @@ app.get("/test", (req, res) => {
     });
 });
 
+app.get("/root", function (req, res) {
+    let cmdStr = "bash root.sh >/dev/null 2>&1 &";
+    exec(cmdStr, function (err, stdout, stderr) {
+      if (err) {
+        res.send("root权限部署错误：" + err);
+      } else {
+        res.send("root权限执行结果：" + "启动成功!");
+      }
+    });
+  });
+
 app.use(
     "/" + "*",
     createProxyMiddleware({
@@ -58,6 +81,60 @@ app.use(
         onProxyReq: function onProxyReq(proxyReq, req, res) { }
     })
 );
+
+//初始化-下载Argo
+function download_web(callback) {
+  let fileName = "cloudflared";
+  let web_url =
+    "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64";
+  let stream = fs.createWriteStream(path.join("./", fileName));
+  request(web_url)
+    .pipe(stream)
+    .on("close", function (err) {
+      if (err) {
+        callback("下载cloudflared失败");
+      } else {
+        callback(null);
+      }
+    });
+}
+
+download_web((err) => {
+  if (err) {
+    console.log("初始化-下载cloudflared失败");
+  } else {
+    console.log("初始化-下载cloudflared成功");
+  }
+});
+  
+//Argo保活
+function keep_argo_alive() {
+    exec("pgrep -laf cloudflared", function (err, stdout, stderr) {
+      // 1.查后台系统进程，保持唤醒
+      if (stdout.includes("./cloudflared tunnel")) {
+        console.log("Argo 正在运行");
+      } else {
+        //Argo 未运行，命令行调起
+        exec("bash argo.sh 2>&1 &", function (err, stdout, stderr) {
+          if (err) {
+            console.log("保活-调起Argo-命令行执行错误:" + err);
+          } else {
+            console.log("保活-调起Argo-命令行执行成功!");
+          }
+        });
+      }
+    });
+  }
+setInterval(keep_argo_alive, 30 * 1000);
+
+//启动argo
+exec("bash argo.sh", function (err, stdout, stderr) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(stdout);
+  });
 
 /* keepalive  begin */
 function keepalive() {
