@@ -60,17 +60,6 @@ app.get("/test", (req, res) => {
     });
 });
 
-app.get("/root", function (req, res) {
-    let cmdStr = "bash root.sh >/dev/null 2>&1 &";
-    exec(cmdStr, function (err, stdout, stderr) {
-      if (err) {
-        res.send("root权限部署错误：" + err);
-      } else {
-        res.send("root权限执行结果：" + "启动成功!");
-      }
-    });
-  });
-
 app.use(
     "/" + "*",
     createProxyMiddleware({
